@@ -1,0 +1,54 @@
+﻿@model NewVersionData
+@{
+    ViewData["Title"] = "Загрузить новую версию программы";
+}
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <form method='post' action='Upload' enctype="multipart/form-data">
+        <p>
+            <label>Имя программы</label><br />
+            <input asp-for="Program" />
+        </p>
+        <p>
+            <label>Версия</label><br />
+            <input asp-for='Version' />
+        </p>
+        <p>
+            <label>Файл архива файлов для обновления</label><br />
+            <input asp-for='SourceFile' />
+        </p>
+        <p>
+            <label>Установочный файл</label><br />
+            <input asp-for='InstallFile' />
+        </p>
+        <p>
+            <label>Файл со списком изменений</label><br />
+            <input asp-for='Changelog' />
+        </p>
+        <input type='submit' value='Отправить' />
+    </form>   
+@*     <form method='post' action='Upload' enctype="multipart/form-data">
+        <p>
+            <label>Имя программы</label><br />
+            <input name='Program' />
+        </p>
+        <p>
+            <label>Версия</label><br />
+            <input name='Version' />
+        </p>
+        <p>
+            <label>Файл архива файлов для обновления</label><br />
+            <input type="file" name='sourceFile' />
+        </p>
+        <p>
+            <label>Установочный файл</label><br />
+            <input type="file" name='installFile' />
+        </p>
+        <p>
+            <label>Файл со списком изменений</label><br />
+            <input type="file" name='changelog' />
+        </p>
+        <input type='submit' value='Отправить' />
+    </form> *@
+</div>

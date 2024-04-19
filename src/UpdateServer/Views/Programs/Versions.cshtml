@@ -1,0 +1,45 @@
+﻿@model VersionViewModel
+
+@{
+    ViewData["Title"] = "Files";
+}
+
+<div class="text-center">
+    <h1 class="display-4">@Model.Program</h1>
+    <table width="80%">
+        <tr height="50">
+            <td width="20%">Версия программы</td>
+            <td>Список изменений</td>
+            <td width="15%">Скачать</td>   
+            @if (@User?.Identity?.IsAuthenticated == true)
+            {
+                <td width="15%">  Удалить </td>
+            }
+        </tr>
+
+        @foreach (ProgramVersionInfo file in Model.Versions)
+        {
+            <tr height="50">
+                <td>@file.Version</td>
+                <td class="tb-left">@file.Changelog</td>
+                <td>
+                    <button class="btn btn-primary" type="submit" style="background: rgb(0,0,255);"
+                            type="button" onclick="location.href='@Url.Action("GetInstallFile", "Version",  new { program = @Model.Program, version = @file.Version })'">
+                        Скачать
+                    </button>
+                </td>      
+                @if (@User?.Identity?.IsAuthenticated == true)
+                {
+                    <td>
+                        <button class="btn btn-primary" type="submit" style="background: rgb(0,0,255);"
+                                type="button" onclick="location.href='@Url.Action("DeleteVersion", "Programs",  new { program = @Model.Program, version = @file.Version })'">
+                            Удалить
+                        </button>
+                    </td>
+                }
+            </tr>
+        }
+    </table>
+
+
+</div>

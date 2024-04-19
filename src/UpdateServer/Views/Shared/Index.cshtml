@@ -1,0 +1,12 @@
+﻿@{
+    ViewData["Title"] = "Files";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <button class="btn btn-primary" type="submit" style="background: rgb(0,0,255);"
+            type="button" onclick="location.href='@Url.Action("DownloadFile", "Home")'">
+        Download
+    </button>
+</div>

@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34031.279
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Updater", "src\Updater\Updater.csproj", "{98B67423-CCBE-4E51-ABCA-3C6C5FC24811}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A389DA46-2791-4FD3-A6A8-0FA2CFB14939}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{7E69A57A-6F51-4DE1-A257-6A5F91106C53}"
+	ProjectSection(SolutionItems) = preProject
+		Dockerfile = Dockerfile
+		LICENSE.md = LICENSE.md
+		Readme.Md = Readme.Md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{98B67423-CCBE-4E51-ABCA-3C6C5FC24811}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98B67423-CCBE-4E51-ABCA-3C6C5FC24811}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98B67423-CCBE-4E51-ABCA-3C6C5FC24811}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98B67423-CCBE-4E51-ABCA-3C6C5FC24811}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{98B67423-CCBE-4E51-ABCA-3C6C5FC24811} = {A389DA46-2791-4FD3-A6A8-0FA2CFB14939}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {688E7029-30B5-4104-91C0-2C1B022992F1}
+	EndGlobalSection
+EndGlobal
