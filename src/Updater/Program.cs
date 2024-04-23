@@ -31,6 +31,8 @@ if (IsNeed == true)
     {
         SetForegroundWindow(GetConsoleWindow());
         WriteColorMessage("Программа успешно обновлена", ConsoleColor.Green);
+        await Task.Delay(1000);
+        Environment.Exit(0);
     }
     else
     {
@@ -64,8 +66,9 @@ bool Downloader_IsAgreeToKillProcess()
 void Downloader_FileDownload(bool? isDownload, string fileName, int currentFile, int filesCount)
 {
     Console.SetCursorPosition(0, Console.CursorTop);
+    Console.ForegroundColor = ConsoleColor.White;
     Console.Write(((double)currentFile / filesCount).ToString("  00.0%   "));
-
+    Console.ForegroundColor = isDownload == true ? ConsoleColor.Blue : ConsoleColor.Green;
     Console.SetCursorPosition(10 + 100 * currentFile / filesCount, Console.CursorTop);
     Console.Write("#");
 }

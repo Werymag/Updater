@@ -84,7 +84,6 @@ namespace Updater
                 string lastVersionDirectory = PrepareDirectories(lastVersion);
                 await DownloadNewVersionAsync(lastVersion);
                 await KillAllProcess();
-                await Task.Delay(100);
                 MoveNewVersionToProgramDirectory(lastVersionDirectory);
                 return (true, "Update does not need");
             }
@@ -180,6 +179,13 @@ namespace Updater
 
                 FileDownload?.Invoke(isDownloadSucceed ? true : null, file.FileName, i + 1, fileList.Count);
             }
+
+            // Copy system uninstall files
+            var uninstallFiles = Directory.GetFiles(ProgramDirectory).Where(p => p.Contains("unins", StringComparison.InvariantCultureIgnoreCase));
+            foreach (var uninstallFile in uninstallFiles)
+            {
+                File.Copy(uninstallFile, $"{DownloadDirectory}\\{Path.GetFileName(uninstallFile)}");
+            }
         }
 
 
@@ -228,8 +234,8 @@ namespace Updater
         /// <param name="lastVersionDirectory">Directory with last version files</param>
         public void MoveNewVersionToProgramDirectory(string lastVersionDirectory)
         {
-            ClearDirectory(ProgramDirectory);
             Directory.Move(DownloadDirectory, lastVersionDirectory);
+            ClearDirectory(ProgramDirectory);            
             CopyAllDataToDirectory(lastVersionDirectory, ProgramDirectory, true);
         }
 
