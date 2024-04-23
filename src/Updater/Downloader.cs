@@ -101,7 +101,7 @@ namespace Updater
         {
             List<Process> programProcesses;
 
-            // 5 attempts to kill process
+            // 10 attempts to kill process
             bool? isAgreeToKillProcess = null;
             await Task.Run(() =>
             {
@@ -124,14 +124,13 @@ namespace Updater
                     programProcesses = Process.GetProcesses()
                         .Where(p => p.ProcessName.ToLower() == ProgramName.ToLower())
                         .ToList();
-                    Task.Delay(50);
+                    Task.Delay(500);
                     counter++;
-                } while (programProcesses.Count > 0 || counter > 4);
+                } while (programProcesses.Count > 0 && counter < 10);
 
                 if (programProcesses.Count > 0) throw new Exception("Can't close the programs");
-            });         
+            });
         }
-
 
         /// <summary>
         /// Check is program need update
