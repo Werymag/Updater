@@ -1,5 +1,7 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Diagnostics;
+using System.Runtime.InteropServices;
 using Updater;
+using static System.Net.Mime.MediaTypeNames;
 
 if (args.Length < 2) return;
 
@@ -26,12 +28,13 @@ if (IsNeed == true)
 
     (bool isSuccess, string message) = await downloader.UpdateProgramAsync();
 
-    Console.WriteLine();  
+    Console.WriteLine();
     if (isSuccess)
     {
         SetForegroundWindow(GetConsoleWindow());
         WriteColorMessage("Программа успешно обновлена", ConsoleColor.Green);
         await Task.Delay(1000);
+        StartProgram(programPath);
         Environment.Exit(0);
     }
     else
@@ -79,6 +82,20 @@ void WriteColorMessage(string Message, ConsoleColor foregroundColor = ConsoleCol
     Console.BackgroundColor = backgroundColor;
     Console.ForegroundColor = foregroundColor;
     Console.WriteLine(Message);
+}
+
+/// Run updated program
+bool StartProgram(string pathToProgram)
+{
+    Process iStartProcess = new(); 
+    iStartProcess.StartInfo.FileName = pathToProgram;   
+    iStartProcess.StartInfo.UseShellExecute = true;
+    if (Environment.OSVersion.Version.Major >= 6)
+    {
+        iStartProcess.StartInfo.Verb = "runas";
+    }
+    iStartProcess.Start();
+    return true;
 }
 
 [DllImport("kernel32.dll", ExactSpelling = true)]
