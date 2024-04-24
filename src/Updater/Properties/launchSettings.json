@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "Updater": {
-      "commandName": "Project",
-      "commandLineArgs": "\"C:\\Users\\Andrew\\Documents\\ZERS\\UpdateTest\\Well Force.exe\"\r\n\"http://localhost:5228\""
-    }
-  }
-}
