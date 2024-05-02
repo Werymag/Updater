@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Downloader_Library\Downloader_Library.csproj" />
+    <ProjectReference Include="..\Downloader_Library\Downloader_Library.csproj" />
   </ItemGroup>
 
 </Project>

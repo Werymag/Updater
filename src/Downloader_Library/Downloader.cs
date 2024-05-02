@@ -6,8 +6,6 @@ namespace Updater
 {
     public class Downloader
     {
-
-
         /// <summary>
         /// Event when file downloaded, copied or failed (null)   
         /// </summary>
@@ -46,7 +44,7 @@ namespace Updater
         /// Current version exe file
         /// </summary>
         public readonly Version CurrentVersion;
-   
+
         /// <summary>
         /// Server address
         /// </summary>
@@ -57,13 +55,18 @@ namespace Updater
         /// </summary>
         private const int _versionHistory = 4;
 
+        /// <summary>
+        /// Directory where last version is downloading 
+        /// </summary>
+        private string LastVersionDirectory = "";
+
         public Downloader(string programPath, string url)
         {
             var appDataDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             ProgramPath = programPath;
             ProgramName = Path.GetFileNameWithoutExtension(programPath);
             VersionsDirectory = $"{appDataDirectory}\\{ProgramName}\\Versions\\";
-            DownloadDirectory = $"{VersionsDirectory}\\Download\\";           
+            DownloadDirectory = $"{VersionsDirectory}\\Download\\";
             ProgramDirectory = Path.GetDirectoryName(programPath) ?? throw new Exception("Wrong path to .exe file");
             string? version = FileVersionInfo.GetVersionInfo(programPath).FileVersion
                 ?? throw new Exception("Could not determine the application version");
@@ -76,18 +79,20 @@ namespace Updater
         /// <summary>
         /// Update program to new version
         /// </summary>
-        public async Task<(bool IsSuccess, string Message)> UpdateProgramAsync()
+        public async Task<(bool IsSuccess, string Message)> DownloadLastVersionAsync()
         {
             try
             {
                 var lastVersion = await GetLastVersionAsync();
                 if (lastVersion is null || lastVersion <= CurrentVersion) return (false, "Update does not need");
 
-                string lastVersionDirectory = PrepareDirectories(lastVersion);
+                LastVersionDirectory = PrepareDirectories(lastVersion);
                 await DownloadNewVersionAsync(lastVersion);
-                await KillAllProcess();
-                var result = MoveNewVersionToProgramDirectory(lastVersionDirectory);                
-                return result;
+                return (true, "Download success");
+
+                //await KillAllProcess();
+                //var result = MoveNewVersionToProgramDirectory(lastVersionDirectory);
+                //return result;
             }
             catch (Exception e)
             {
@@ -96,41 +101,19 @@ namespace Updater
         }
 
         /// <summary>
-        /// Kill all process have the same name
+        /// Update program to new version
         /// </summary>
-        public async Task KillAllProcess()
+        public async Task<(bool IsSuccess, string Message)> CopyFileToSourceAsync(bool? isKillAllProcess = null)
         {
-            List<Process> programProcesses;
-
-            // 10 attempts to kill process
-            bool? isAgreeToKillProcess = null;
-            await Task.Run(() =>
+            try
             {
-                int counter = 0;
-                do
-                {
-                    programProcesses = Process.GetProcesses()
-                    .Where(p => p.ProcessName.ToLower() == ProgramName.ToLower())
-                    .ToList();
-
-                    if (programProcesses.Count > 0)
-                    {
-                        isAgreeToKillProcess ??= IsAgreeToKillProcess?.Invoke();
-                        if (isAgreeToKillProcess == true)
-                        {
-                            foreach (Process process in programProcesses)
-                            { process.Kill(); }
-                        }
-                    }
-                    programProcesses = Process.GetProcesses()
-                        .Where(p => p.ProcessName.ToLower() == ProgramName.ToLower())
-                        .ToList();
-                    Task.Delay(500);
-                    counter++;
-                } while (programProcesses.Count > 0 && counter < 10);
-
-                if (programProcesses.Count > 0) throw new Exception("Can't close the programs");
-            });
+                await KillAllProcess(isKillAllProcess);
+                return MoveNewVersionToProgramDirectory(LastVersionDirectory);         
+            }
+            catch (Exception e)
+            {
+                return (false, e.Message);
+            }
         }
 
         /// <summary>
@@ -144,8 +127,59 @@ namespace Updater
             var currentVersion = new Version(version);
             var lastVersion = await GetLastVersionAsync();
 
-            return (lastVersion > currentVersion);
+            return lastVersion != null ? (lastVersion > currentVersion) : null;
         }
+
+        /// <summary>
+        /// Check working process
+        /// </summary>
+        /// <returns></returns>
+        public bool IsProgramHaveWorkingProcess()
+        {
+            return GetWorkingProgramProcess().Count() > 0;
+        }
+
+        /// <summary>
+        /// Kill all process have the same name
+        /// </summary>
+        private async Task KillAllProcess(bool? isAgreeToKillProcess = null)
+        {
+            List<Process> programProcesses;
+
+            // 10 attempts to kill process
+            await Task.Run(() =>
+            {
+                int counter = 0;
+                do
+                {
+                    programProcesses = GetWorkingProgramProcess();
+
+                    if (programProcesses.Count > 0)
+                    {
+                        isAgreeToKillProcess ??= IsAgreeToKillProcess?.Invoke();
+                        if (isAgreeToKillProcess == true)
+                        {
+                            foreach (Process process in programProcesses)
+                            { process.Kill(); }
+                        }
+                        if (isAgreeToKillProcess == false) throw new Exception("Need close programs before update");
+                    }
+                    Task.Delay(500);
+                    programProcesses = GetWorkingProgramProcess();
+                    counter++;
+                } while (programProcesses.Count > 0 && counter < 10);
+
+                if (programProcesses.Count > 0) throw new Exception("Can't close the programs");
+            });
+        }
+
+        private List<Process> GetWorkingProgramProcess()
+        {
+            return Process.GetProcesses()
+                           .Where(p => p.ProcessName?.ToLower() == ProgramName?.ToLower())
+                           .ToList();
+        }
+
 
         /// <summary>
         /// Uploading a new version to AppData/Roaming/{program} and then updating the program files in the program directory
@@ -246,7 +280,7 @@ namespace Updater
                 CopyAllDataToDirectory(BackupOldVersionDirectory, ProgramDirectory, true);
                 return (false, e.Message);
             }
-                      
+
             CopyAllDataToDirectory(lastVersionDirectory, ProgramDirectory, true);
             return (true, "Ok");
         }

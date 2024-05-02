@@ -1,12 +1,8 @@
 {
   "profiles": {
-    "Updater": {
+    "Updater_Windows": {
       "commandName": "Project",
       "commandLineArgs": "\"c:\\Users\\Andrew\\Documents\\ZERS\\UpdateTest\\Well Force.exe\"\r\n\"http://programs.werymag.ru\""
-    },
-    "WSL": {
-      "commandName": "WSL2",
-      "distributionName": ""
     }
   }
 }

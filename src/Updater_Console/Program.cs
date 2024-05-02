@@ -26,26 +26,30 @@ if (IsNeed == true)
     Console.Write("  00.0%   ");
     Console.Write(string.Join("", Enumerable.Range(0, 100).Select(i => "_")));
 
-    (bool isSuccess, string message) = await downloader.UpdateProgramAsync();
-
+    (bool isDownloadSuccess, string downloadMessage) = await downloader.DownloadLastVersionAsync();
+    (bool isCopySuccess, string copyMessage) = await downloader.CopyFileToSourceAsync();
+  
     Console.WriteLine();
-    if (isSuccess)
+    if (!isDownloadSuccess)
+    { WriteColorMessage($"Ошибка загрузки программы\n{downloadMessage}", ConsoleColor.Red); }
+
+    if (!isCopySuccess)
+    {
+        WriteColorMessage($"Ошибка обновления программы\n{copyMessage}", ConsoleColor.Red);
+        WriteColorMessage("Пожалуйста отключите антивирус или запустите программу с правами администратора для корректной установки обновления", ConsoleColor.Red);
+    }
+
+    if (isDownloadSuccess && isCopySuccess)
     {
         SetForegroundWindow(GetConsoleWindow());
         WriteColorMessage("Программа успешно обновлена", ConsoleColor.Green);
-        await Task.Delay(1000);
         StartProgram(programPath);
+        await Task.Delay(1000);
         Environment.Exit(0);
-    }
-    else
-    {
-        WriteColorMessage($"Ошибка обновления программы\n{message}", ConsoleColor.Red);
-        WriteColorMessage("Пожалуйста отключите антивирус для корректной установки обновления", ConsoleColor.Red);
     }
 
     Console.ReadLine();
 }
-
 
 
 /// Question about kill all process 
@@ -88,8 +92,8 @@ void WriteColorMessage(string Message, ConsoleColor foregroundColor = ConsoleCol
 /// Run updated program
 bool StartProgram(string pathToProgram)
 {
-    Process iStartProcess = new(); 
-    iStartProcess.StartInfo.FileName = pathToProgram;   
+    Process iStartProcess = new();
+    iStartProcess.StartInfo.FileName = pathToProgram;
     iStartProcess.StartInfo.UseShellExecute = true;
     if (Environment.OSVersion.Version.Major >= 6)
     {
