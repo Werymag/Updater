@@ -7,7 +7,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A389DA46-279
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{7E69A57A-6F51-4DE1-A257-6A5F91106C53}"
 	ProjectSection(SolutionItems) = preProject
-		Dockerfile = Dockerfile
 		LICENSE.md = LICENSE.md
 		Readme.Md = Readme.Md
 	EndProjectSection
@@ -16,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Updater_Console", "src\Upda
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Downloader_Library", "src\Downloader_Library\Downloader_Library.csproj", "{10815620-2179-4A96-B686-8716AA2BAD12}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater_Windows", "src\Updater_Windows\Updater_Windows.csproj", "{AFFD707E-983A-4673-A11A-1F96A067D854}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Updater_Windows", "src\Updater_Windows\Updater_Windows.csproj", "{AFFD707E-983A-4673-A11A-1F96A067D854}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
