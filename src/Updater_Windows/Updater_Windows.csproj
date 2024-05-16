@@ -6,6 +6,9 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <Title>Updater</Title>
+    <Product>Updater</Product>
+    <AssemblyName>Updater</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
